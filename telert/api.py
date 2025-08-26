@@ -203,6 +203,56 @@ def configure_discord(webhook_url: str, username: Optional[str] = None, avatar_u
     configure_provider(Provider.DISCORD, **config)
 
 
+def configure_endpoint(
+    url: str,
+    method: str = "POST",
+    headers: Optional[Dict[str, str]] = None,
+    payload_template: Optional[str] = None,
+    name: str = "Custom Endpoint",
+    timeout: int = 20,
+    set_default: bool = True,
+) -> None:
+    """
+    Configure Telert for custom HTTP endpoint notifications.
+
+    Args:
+        url: The URL to send notifications to (supports placeholders like {message}, {status_code}, {duration_seconds})
+        method: HTTP method to use (default: "POST")
+        headers: Optional dictionary of HTTP headers
+        payload_template: JSON payload template with placeholders (default: '{"text": "{message}"}')
+        name: Friendly name for this endpoint (default: "Custom Endpoint")
+        timeout: Request timeout in seconds (default: 20)
+        set_default: Whether to set Endpoint as the default provider
+
+    Examples:
+        from telert import configure_endpoint
+
+        # Basic configuration
+        configure_endpoint("https://api.example.com/webhook")
+
+        # Advanced configuration with custom headers and payload
+        configure_endpoint(
+            url="https://api.example.com/notifications",
+            method="POST",
+            headers={"Authorization": "Bearer token123", "Content-Type": "application/json"},
+            payload_template='{"alert": "{message}", "timestamp": "{timestamp}"}',
+            name="My API",
+            timeout=30
+        )
+    """
+    config = {
+        "url": url,
+        "method": method,
+        "headers": headers or {},
+        "payload_template": payload_template or '{"text": "{message}"}',
+        "name": name,
+        "timeout": timeout,
+        "set_default": set_default,
+    }
+    
+    configure_provider(Provider.ENDPOINT, **config)
+
+
 def configure_email(
     server: str,
     port: int,
