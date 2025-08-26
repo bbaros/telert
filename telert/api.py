@@ -210,6 +210,8 @@ def configure_email(
     password: str,
     from_addr: str,
     to_addrs: List[str],
+    subject_template: Optional[str] = None,
+    use_html: bool = False,
     set_default: bool = True,
 ) -> None:
     """
@@ -222,11 +224,14 @@ def configure_email(
         password: The SMTP server password
         from_addr: The sender email address
         to_addrs: The recipient email addresses
+        subject_template: Template for email subject line with placeholders like {label} and {status}
+        use_html: Whether to send HTML formatted emails
         set_default: Whether to set Email as the default provider
 
     Examples:
         from telert import configure_email
 
+        # Basic configuration
         configure_email(
             "smtp.example.com",
             587,
@@ -234,6 +239,19 @@ def configure_email(
             "password",
             "from@example.com",
             ["to@example.com"],
+            set_default=True
+        )
+
+        # Advanced configuration with custom subject and HTML support
+        configure_email(
+            "smtp.example.com",
+            587,
+            "user@example.com",
+            "password",
+            "from@example.com",
+            ["to@example.com"],
+            subject_template="Alert: {label} - {status}",
+            use_html=True,
             set_default=True
         )
     """
@@ -246,6 +264,13 @@ def configure_email(
         "to_addrs": to_addrs,
         "set_default": set_default,
     }
+    
+    if subject_template is not None:
+        config["subject_template"] = subject_template
+    
+    if use_html:
+        config["use_html"] = use_html
+    
     configure_provider(Provider.EMAIL, **config)
 
 
