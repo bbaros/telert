@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.6 (2025-08-27)
+- Fix configure_endpoint and configure_email Python functions
+
 ## 0.2.5 (2025-06-20)
 - Fix legacy telert config command
 
