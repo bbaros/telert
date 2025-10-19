@@ -673,8 +673,6 @@ def do_hook(a):
                     typeset -g __TELERT_CMD__="$(history -1 2>/dev/null | head -1 | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//')"
                 fi
                 typeset -g __TELERT_START__=$EPOCHSECONDS
-                # Debug: echo to verify function is called
-                echo "DEBUG: preexec called - CMD: $__TELERT_CMD__, START: $__TELERT_START__" >&2
             }}
 
             _telert_precmd() {{
@@ -682,8 +680,6 @@ def do_hook(a):
                     local st=$?
                     local end=$EPOCHSECONDS
                     local duration=$((end - __TELERT_START__))
-                    # Debug: echo to verify function is called and show variables
-                    echo "DEBUG: precmd called - CMD: $__TELERT_CMD__, START: $__TELERT_START__, STATUS: $st" >&2
                     if (( duration >= {threshold} )); then
                         telert send "$__TELERT_CMD__ exited with $st in $(printf '%dm%02ds' $((duration/60)) $((duration%60)))"
                     fi
