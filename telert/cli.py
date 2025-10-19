@@ -632,7 +632,7 @@ def do_hook(a):
             # Load zsh hooks module if not already loaded
             if [[ -z "$__TELERT_HOOKS_LOADED" ]]; then
                 autoload -U add-zsh-hook 2>/dev/null || {{
-                    echo "Warning: add-zsh-hook not available, installing from zsh-hooks..."
+                    echo "Warning: add-zsh-hook not available, using fallback implementation..."
                     # Fallback for systems without zsh-hooks
                     _telert_preexec() {{
                         __TELERT_CMD__="$1"
@@ -693,8 +693,8 @@ def do_hook(a):
         """).strip()
     else:  # Default to bash
         hook_script = textwrap.dedent(f"""
-            telert_preexec() {{{{ export TELERT_CMD="$BASH_COMMAND"; export TELERT_START=$EPOCHSECONDS; }}}}
-            telert_precmd()  {{{{ local st=$?; if [[ -n "$TELERT_START" ]]; then local d=$((EPOCHSECONDS-TELERT_START)); if (( d >= {threshold} )); then telert send "$__TELERT_CMD exited with $st in $(printf '%dm%02ds' $((d/60)) $((d%60)))"; fi; unset TELERT_START; fi; }}}}
+            telert_preexec() {{{{ export __TELERT_CMD__="$BASH_COMMAND"; export TELERT_START=$EPOCHSECONDS; }}}}
+            telert_precmd()  {{{{ local st=$?; if [[ -n "$TELERT_START" ]]; then local d=$((EPOCHSECONDS-TELERT_START)); if (( d >= {threshold} )); then telert send "$__TELERT_CMD__ exited with $st in $(printf '%dm%02ds' $((d/60)) $((d%60)))"; fi; unset TELERT_START; fi; }}}}
             trap 'telert_preexec' DEBUG
             PROMPT_COMMAND="telert_precmd${{{{PROMPT_COMMAND:+;}}}}$PROMPT_COMMAND"
         """).strip()
