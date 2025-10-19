@@ -632,7 +632,7 @@ def do_hook(a):
             # Load zsh hooks module if not already loaded
             if [[ -z "$__TELERT_HOOKS_LOADED" ]]; then
                 autoload -U add-zsh-hook 2>/dev/null || {{
-                    echo "Warning: add-zsh-hook not available, using fallback implementation..."
+                    echo "Warning: add-zsh-hook not available, using fallback implementation... Please ensure zsh is properly installed and configured."
                     # Fallback for systems without zsh-hooks
                     _telert_preexec() {{
                         __TELERT_CMD__="$1"
